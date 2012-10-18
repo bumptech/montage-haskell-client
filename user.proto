@@ -1,0 +1,11 @@
+message UserInfo {
+  required uint32 uid = 1;
+}
+
+message UserEvent {
+  required uint32 eid = 1;
+}
+
+message UserName {
+  required bytes name = 1;
+}
