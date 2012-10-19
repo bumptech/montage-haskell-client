@@ -1,5 +1,15 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Network.Riak.MontageClient where
+module Network.Riak.MontageClient
+       (
+         montageGet
+       , montageGetMany
+       , montageGetBy
+       , montageGetBy'
+       , montageDelete
+       , montagePut
+       , montagePutMany
+       )
+       where
 
 import System.UUID.V4 (uuid)
 import System.Timeout (timeout)
