@@ -27,32 +27,34 @@ import qualified Data.ListLike as LL
 import qualified Data.Sequence as Seq
 
 import qualified Data.ByteString.Lazy as L
+import qualified Data.ByteString.Char8 as S
 import qualified Data.ByteString.Lazy.Char8 as B
 
 import Text.ProtocolBuffers.Basic (toUtf8, uToString, Utf8)
 import Text.ProtocolBuffers.WireMessage (messageGet, messagePut, Wire)
 import Text.ProtocolBuffers.Reflections (ReflectDescriptor)
 
-import Network.Riak.Montage.Util
-import Network.Riak.Montage.Proto.Montage.MontageWireMessages
-import Network.Riak.Montage.Proto.Montage.MontageObject
-import Network.Riak.Montage.Proto.Montage.MontageEnvelope as ME
-import Network.Riak.Montage.Proto.Montage.MontageGet
-import Network.Riak.Montage.Proto.Montage.MontagePut
-import Network.Riak.Montage.Proto.Montage.MontageGetMany
-import Network.Riak.Montage.Proto.Montage.MontageGetReference
-import Network.Riak.Montage.Proto.Montage.MontageGetResponse as MGR
-import Network.Riak.Montage.Proto.Montage.MontagePutResponse as MPR
-import Network.Riak.Montage.Proto.Montage.MontagePutManyResponse as MPMR
-import Network.Riak.Montage.Proto.Montage.MontagePutMany
-import Network.Riak.Montage.Proto.Montage.MontageDelete
+import Network.Riak.MontageClient.Proto.MontageClient.MontageWireMessages
+import Network.Riak.MontageClient.Proto.MontageClient.MontageObject
+import Network.Riak.MontageClient.Proto.MontageClient.MontageEnvelope as ME
+import Network.Riak.MontageClient.Proto.MontageClient.MontageGet
+import Network.Riak.MontageClient.Proto.MontageClient.MontagePut
+import Network.Riak.MontageClient.Proto.MontageClient.MontageGetMany
+import Network.Riak.MontageClient.Proto.MontageClient.MontageGetReference
+import Network.Riak.MontageClient.Proto.MontageClient.MontageGetResponse as MGR
+import Network.Riak.MontageClient.Proto.MontageClient.MontagePutResponse as MPR
+import Network.Riak.MontageClient.Proto.MontageClient.MontagePutManyResponse as MPMR
+import Network.Riak.MontageClient.Proto.MontageClient.MontagePutMany
+import Network.Riak.MontageClient.Proto.MontageClient.MontageDelete
 
-import Network.Riak.Montage.Proto.Montage.MontageCommandResponse as MCR
-import qualified Network.Riak.Montage.Proto.Montage.MontageError as MErr
+import qualified Network.Riak.MontageClient.Proto.MontageClient.MontageError as MErr
 
 type MontagePool = Pool (ZMQ.Socket Req)
 
 -- utils
+
+sTl :: S.ByteString -> B.ByteString
+sTl s = B.fromChunks [s]
 
 formatThrow :: (Params ps, Error e, MonadError e m, Monad m) => Format -> ps -> m ()
 formatThrow f p = throwError (strMsg $ T.unpack $ format f p)
