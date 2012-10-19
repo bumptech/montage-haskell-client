@@ -12,7 +12,25 @@ Cabal-version:       >=1.8
 
 Library
   Exposed-modules:     Network.Riak.MontageClient,
-                       Network.Riak.MontageClient.Proto.MontageClient.MontageObject
+                       Network.Riak.MontageClient.MontageClient,
+                       Network.Riak.MontageClient.Proto.MontageClient.MontageCommand,
+                       Network.Riak.MontageClient.Proto.MontageClient.MontageCommandResponse,
+                       Network.Riak.MontageClient.Proto.MontageClient.MontageDelete,
+                       Network.Riak.MontageClient.Proto.MontageClient.MontageDeleteResponse,
+                       Network.Riak.MontageClient.Proto.MontageClient.MontageEnvelope,
+                       Network.Riak.MontageClient.Proto.MontageClient.MontageError,
+                       Network.Riak.MontageClient.Proto.MontageClient.MontageGet,
+                       Network.Riak.MontageClient.Proto.MontageClient.MontageGetMany,
+                       Network.Riak.MontageClient.Proto.MontageClient.MontageGetReference,
+                       Network.Riak.MontageClient.Proto.MontageClient.MontageGetResponse,
+                       Network.Riak.MontageClient.Proto.MontageClient.MontageGetStatus,
+                       Network.Riak.MontageClient.Proto.MontageClient.MontageObject,
+                       Network.Riak.MontageClient.Proto.MontageClient.MontagePut,
+                       Network.Riak.MontageClient.Proto.MontageClient.MontagePutMany,
+                       Network.Riak.MontageClient.Proto.MontageClient.MontagePutManyResponse,
+                       Network.Riak.MontageClient.Proto.MontageClient.MontagePutResponse,
+                       Network.Riak.MontageClient.Proto.MontageClient.MontageSubrequestSpec,
+                       Network.Riak.MontageClient.Proto.MontageClient.MontageWireMessages
 
   -- Packages needed in order to build this package.
   Build-depends:  base >= 4 && < 5,
