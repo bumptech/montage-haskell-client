@@ -34,7 +34,6 @@ Library
                   protocol-buffers >= 2.0.11,
                   protocol-buffers-descriptor >= 2.0.11,
                   stats-web,
-                  montage,
                   safe
 
   Extensions: OverloadedStrings,DeriveDataTypeable
