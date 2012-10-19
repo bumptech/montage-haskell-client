@@ -1,0 +1,23 @@
+*install*
+
+https://github.com/bumptech/montage
+https://github.com/bumptech/riak-haskell-client
+https://github.com/wmoss/StatsWeb
+-- install the dependencies
+-- recommend installing them in a sandbox in a contrib folder
+
+cabal install
+-- installs Network.Riak.MontageClient
+-- recommend using a sandbox, hsenv is nice
+
+
+*examples*
+
+runhaskell examples/basic_proxy.hs
+-- proxy server
+
+runhaskell examples/test_basic_proxy.hs
+-- client tests basic commands
+
+runhaskell examples/test_reference.hs
+-- client tests reference get requests
