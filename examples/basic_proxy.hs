@@ -40,16 +40,7 @@ chooseSinglePool pool = (\_ -> pool)
 
 -- Resolution logic
 {-
-  Here your data can be one of two simple protocol buffers:
-    message UserInfo {
-      required uint32 uid = 1;
-    }
-
-    message UserEvent {
-      required uint32 eid = 1;
-    }
-  .
-  You always wrap it in a resolution data type so you can create a
+  Wrap your data in a resolution data type so you can create a
   unique BucketSpec by bucket name.
 
   A simple last-write-wins resolution uses something like the
