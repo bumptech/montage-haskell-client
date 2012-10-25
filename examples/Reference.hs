@@ -50,12 +50,9 @@ main = do
 
   (subKey, valuesFound) <- montageGetBy' montageZpool "u-info" (putDecimal 1) ["u-event", "u-name"]
   assert ((data' $ fromMaybe (error "failed get subKey") subKey) == data' ui) $ return ()
-
-  case valuesFound of
-      Just v -> do
-          assert (length v == 2) $ return ()
-          let [ueFound, unFound] = v
-          assert ((data' ueFound == data' ue) && (data' unFound == data' un)) $ return ()
-      Nothing -> error "reference get found nothing"
+  assert (length valuesFound == 2) $ return ()
+  assert (and $ map isJust valuesFound) $ return ()
+  let [Just ueFound, Just unFound] = valuesFound
+  assert ((data' ueFound == data' ue) && (data' unFound == data' un)) $ return ()
 
   hPutStrLn stdout "\nsuccessfully did reference get\n"

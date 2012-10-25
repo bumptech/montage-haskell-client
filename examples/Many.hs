@@ -16,6 +16,12 @@ import Utils (putDecimal, generateUI)
 threadCount :: Int
 threadCount = 1
 
+eachGet :: (Maybe MontageObject, MontageObject) -> IO ()
+eachGet (mr, d) = case mr of
+    Just mo -> assert (comparable d == comparable mo) $ return ()
+      where comparable m = (MO.bucket m, MO.key m, MO.data' m)
+    Nothing -> error $ "found nothing at bucket " ++ show (bucket d) ++ " key " ++ show (key d)
+
 main :: IO ()
 main = do
   ctx <- ZMQ.init 1
@@ -32,12 +38,10 @@ main = do
 
   -- test get many
   mr <- montagePutMany montageZpool ds
-  assert (length (fromMaybe (error "failed put") mr) == length ds) $ return ()
+  assert (length mr == length ds) $ return ()
 
   mr <- montageGetMany montageZpool $ zip [ bucket | _ <- [1..3]] $ map putDecimal [1..3]
-  case mr of
-      Just mo -> assert ((map comparable ds) == (map comparable mo)) $ return ()
-        where comparable mo = (MO.bucket mo, MO.key mo, MO.data' mo)
-      Nothing -> error "found nothing on got many"
+  assert (mr /= []) $ return ()
+  mapM_ eachGet $ zip mr ds
 
   hPutStrLn stdout "\nsuccessfully matched put many with get many\n"
