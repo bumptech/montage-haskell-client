@@ -23,9 +23,51 @@ We recommend using a sandbox, hsenv is particularly good.
 
 To setup montage itself, see http://github.com/bumptech/montage
 
-===========
+Configuration
+=======
+
+The montage proxy is port configurable (here given the Config handle set to 7078), with riak running on 8087::
+
+    import Network.Riak (defaultClient, connect, disconnect, Client(port), Connection)
+    import Data.Conduit.Pool (Pool, createPool)
+
+    import Network.Riak.Montage
+
+    main :: IO ()
+    main = do
+        mainPool <- createPool
+	    (connect $ defaultClient {port = "8087"})
+	    disconnect
+	    1 -- stripes
+	    10 -- timeout
+	    300 -- max connections
+
+	let cfg' = cfg { proxyPort = 7078 }
+
+	runDaemon (cfg' :: Config ResObject) mainPool
+
+See montage for how to define resolutions for a resolution object (ResObject), which is also required to start the proxy.
+
+Your client's request pool must connect (not bind) to that port::
+
+    import Data.Conduit.Pool (Pool, createPool)
+    import System.ZMQ as ZMQ
+
+    import Network.Riak.MontageClient
+
+    montageZpool <- createPool (do
+        s <- ZMQ.socket ctx Req
+	ZMQ.connect s "tcp://localhost:7078"
+	return s
+	) ZMQ.close 1 5 1
+
+    let (bucket, key) = ("u-info", "1")
+    resp <- montageGet montageZpool bucket key
+
+See Examples and More for full documentation of client requests.
+
 Examples
-===========
+=======
 To setup the examples, first download hprotoc::
 
     cabal install hprotoc
