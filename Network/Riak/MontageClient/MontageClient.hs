@@ -25,6 +25,8 @@ module Network.Riak.MontageClient.MontageClient
        -- * Put requests
        , montagePut
        , montagePutMany
+       -- * Commands
+       , montageCommand
        )
        where
 
@@ -45,7 +47,7 @@ import qualified Data.ByteString.Lazy as L
 import qualified Data.ByteString.Char8 as S
 import qualified Data.ByteString.Lazy.Char8 as B
 
-import Text.ProtocolBuffers.Basic (uToString)
+import Text.ProtocolBuffers.Basic (uToString, Utf8)
 import Text.ProtocolBuffers.WireMessage (messageGet, messagePut, Wire)
 import Text.ProtocolBuffers.Reflections (ReflectDescriptor)
 
@@ -62,6 +64,8 @@ import Network.Riak.MontageClient.Proto.MontageClient.MontagePutResponse as MPR
 import Network.Riak.MontageClient.Proto.MontageClient.MontagePutManyResponse as MPMR
 import Network.Riak.MontageClient.Proto.MontageClient.MontagePutMany
 import Network.Riak.MontageClient.Proto.MontageClient.MontageDelete
+import Network.Riak.MontageClient.Proto.MontageClient.MontageCommand
+import Network.Riak.MontageClient.Proto.MontageClient.MontageCommandResponse
 
 import qualified Network.Riak.MontageClient.Proto.MontageClient.MontageError as MErr
 
@@ -217,3 +221,13 @@ montagePutMany pool os = do
         MONTAGE_ERROR        -> formatThrow "Incorrect response to MontagePutMany: error={}" (Only $ uToString $ MErr.error mes) >> return []
           where mes = messageGetError "montagePutMany: MontageGetResponse" $ ME.msg res
         _ -> formatThrow "Unknown response to MontagePutMany" () >> return []
+
+montageCommand :: MontagePool -> Utf8 -> Maybe L.ByteString -> IO (Maybe MontageCommandResponse)
+montageCommand pool cmd args = do
+    res <- montageRequest pool MONTAGE_COMMAND (messagePut $ MontageCommand cmd args)
+    case ME.mtype res of
+        MONTAGE_COMMAND_RESPONSE -> return $ Just $ messageGetError "MontageCommandResponse" $ ME.msg res
+        MONTAGE_ERROR            -> do
+            formatThrow "Incorrect response to MontageCommand: error={}" $ Only $ uToString $ MErr.error $ messageGetError "MontageError: MontageCommand" $ ME.msg res
+            return Nothing
+        _ -> formatThrow "Unknown response to MontageCommand" () >> return Nothing
