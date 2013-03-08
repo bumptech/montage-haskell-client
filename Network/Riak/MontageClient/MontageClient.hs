@@ -103,11 +103,7 @@ sixtySecs :: Int
 sixtySecs = 60 * 1000 * 1000
 
 montageRpc :: MontagePool -> L.ByteString -> IO MontageEnvelope
-montageRpc pool req = do
-    mr <- timeout sixtySecs rpc
-    case mr of
-        Just r -> return $ (messageGetError "MontageEnvelope" . sTl) r
-        Nothing -> error "timeout on montageRpc!"
+montageRpc pool req = (return . messageGetError "MontageEnvelop" . sTl) =<< rpc
   where
     rpc =   withResource pool (\sock -> do
                 ZMQ.send' sock req []
