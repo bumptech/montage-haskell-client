@@ -4,7 +4,7 @@
 -- Module:      Network.Riak.MontageClient.MontageClient
 -- Maintainer:  Erin Dahlgren <edahlgren@bu.mp>
 -- Stability:   experimental
--- Portability: portable
+-- Portability: non-portable
 --
 -- Functions for making requests to the Montage riak resolution proxy.
 
@@ -32,7 +32,7 @@ module Network.Riak.MontageClient.MontageClient
 
 import System.UUID.V4 (uuid)
 import System.Timeout (timeout)
-import System.ZMQ as ZMQ
+import System.Nitro as Nitro
 import Control.Monad.Error (throwError, strMsg, Error, MonadError)
 import Control.Monad
 
@@ -75,12 +75,15 @@ type ReferenceBucket = L.ByteString
 
 type Key = L.ByteString
 
-type MontagePool = Pool (ZMQ.Socket Req)
+type MontagePool = Pool Nitro.NitroSocket
 
 -- utils
 
 sTl :: S.ByteString -> B.ByteString
 sTl s = B.fromChunks [s]
+
+lTs :: B.ByteString -> S.ByteString
+lTs l = S.concat $ B.toChunks l
 
 formatThrow :: (Params ps, Error e, MonadError e m, Monad m) => Format -> ps -> m ()
 formatThrow f p = throwError (strMsg $ T.unpack $ format f p)
@@ -103,11 +106,11 @@ sixtySecs :: Int
 sixtySecs = 60 * 1000 * 1000
 
 montageRpc :: MontagePool -> L.ByteString -> IO MontageEnvelope
-montageRpc pool req = (return . messageGetError "MontageEnvelop" . sTl) =<< rpc
+montageRpc pool req = (return . messageGetError "MontageEnvelope" . sTl) =<< rpc
   where
     rpc =   withResource pool (\sock -> do
-                ZMQ.send' sock req []
-                ZMQ.receive sock []
+                Nitro.send sock (lTs req) []
+                Nitro.recv sock []
                 )
 
 montageRequest :: MontagePool -> MontageWireMessages -> L.ByteString -> IO MontageEnvelope

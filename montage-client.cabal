@@ -1,5 +1,5 @@
 Name:                montage-client
-Version:             0.1
+Version:             0.2
 Synopsis:            Riak Resolution Proxy Client
 Homepage:            http://github.com/bumptech/montage-haskell-client
 License:             BSD3
@@ -47,15 +47,16 @@ Library
                   stm>=2.2,
                   pool-conduit>=0.1.0.2&&<0.2,
                   unordered-containers >= 0.2.1 && < 0.3,
-                  zeromq-haskell>=0.8 && < 0.9,
                   protocol-buffers >= 2.0.11,
                   protocol-buffers-descriptor >= 2.0.11,
                   stats-web,
-                  safe
+                  safe,
+                  nitro
 
   Extensions: OverloadedStrings,DeriveDataTypeable
   Extensions: FlexibleInstances,DoAndIfThenElse,ScopedTypeVariables
   Extensions: BangPatterns,GADTs,MultiParamTypeClasses,FunctionalDependencies
   Extensions: RankNTypes,FlexibleContexts,OverlappingInstances,TupleSections
+  Extensions: ForeignFunctionInterface
 
   Ghc-Options: -Wall -O2 -threaded -rtsopts -funfolding-use-threshold=16 -fexcess-precision -feager-blackholing
