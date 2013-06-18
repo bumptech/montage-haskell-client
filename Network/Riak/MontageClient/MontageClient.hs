@@ -109,8 +109,9 @@ montageRpc :: MontagePool -> L.ByteString -> IO MontageEnvelope
 montageRpc pool req = (return . messageGetError "MontageEnvelope" . sTl) =<< rpc
   where
     rpc =   withResource pool (\sock -> do
-                Nitro.send sock (lTs req) []
-                Nitro.recv sock []
+                fr <- bstrToFrame (lTs req)
+                Nitro.send sock fr []
+                Nitro.frameToBstr =<< Nitro.recv sock []
                 )
 
 montageRequest :: MontagePool -> MontageWireMessages -> L.ByteString -> IO MontageEnvelope
