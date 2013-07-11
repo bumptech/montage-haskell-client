@@ -1,5 +1,5 @@
 Name:                montage-client
-Version:             0.4
+Version:             0.5
 Synopsis:            Riak Resolution Proxy Client
 Homepage:            http://github.com/bumptech/montage-haskell-client
 License:             BSD3
@@ -51,7 +51,7 @@ Library
                   protocol-buffers-descriptor >= 2.0.11,
                   stats-web,
                   safe,
-                  nitro==0.2.2.4
+                  nitro==0.2.2.5
 
   Extensions: OverloadedStrings,DeriveDataTypeable
   Extensions: FlexibleInstances,DoAndIfThenElse,ScopedTypeVariables
